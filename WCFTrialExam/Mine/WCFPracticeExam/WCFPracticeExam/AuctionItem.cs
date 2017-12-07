@@ -10,7 +10,7 @@ namespace WCFPracticeExam
     public class AuctionItem
     {
         [DataMember]
-        public int ItemId { get; set; }
+        public int ItemNumber { get; set; }
         [DataMember]
         public string ItemDescription { get; set; }
         [DataMember]
@@ -21,6 +21,7 @@ namespace WCFPracticeExam
         public string BidCustomerName { get; set; }
         [DataMember]
         public string BidCustomerPhone { get; set; }
-
+        [DataMember]
+        public DateTime BidTimestamp { get; set; }
     }
 }

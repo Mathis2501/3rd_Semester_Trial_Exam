@@ -12,22 +12,51 @@ namespace WCFPracticeExam
     // NOTE: In order to launch WCF Test Client for testing this service, please select Service1.svc or Service1.svc.cs at the Solution Explorer and start debugging.
     public class Service1 : IService1
     {
-        public string GetData(int value)
+        private object _lock;
+        public AuctionItem GetAuctionItem(int itemNumber)
         {
-            return string.Format("You entered: {0}", value);
+            lock (_lock)
+            {
+                foreach (var item in AuctionItemRepository.AuctionItems)
+                {
+                    if (item.ItemNumber == itemNumber)
+                    {
+                        return item;
+                    }
+                }
+                return null;
+            }
         }
 
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
+        public List<AuctionItem> GetAuctionItems()
         {
-            if (composite == null)
+            lock (_lock)
             {
-                throw new ArgumentNullException("composite");
+                return AuctionItemRepository.AuctionItems;
             }
-            if (composite.BoolValue)
+        }
+
+        public string BidOnItem(Bid newBid)
+        {
+            lock (_lock)
             {
-                composite.StringValue += "Suffix";
+                foreach (var item in AuctionItemRepository.AuctionItems)
+                {
+                    if (item.ItemNumber == newBid.ItemNumber)
+                    {
+                        if (item.BidPrice < newBid.Price)
+                        {
+                            item.BidPrice = newBid.Price;
+                            item.BidCustomerName = newBid.CustomName;
+                            item.BidCustomerPhone = newBid.CustomPhone;
+                            item.BidTimestamp = DateTime.Now;
+                            return "OK";
+                        }
+                        return "Bid too low";
+                    }
+                }
             }
-            return composite;
+            return "Item does not exist";
         }
     }
 }

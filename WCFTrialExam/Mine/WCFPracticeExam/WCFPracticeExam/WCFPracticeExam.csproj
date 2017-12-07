@@ -66,6 +66,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuctionItem.cs" />
+    <Compile Include="AuctionItemRepository.cs" />
+    <Compile Include="Bid.cs" />
     <Compile Include="Service1.svc.cs">
       <DependentUpon>Service1.svc</DependentUpon>
     </Compile>
