@@ -17,14 +17,7 @@ namespace WCFPracticeExam
         {
             lock (_lock)
             {
-                foreach (var item in AuctionItemRepository.AuctionItems)
-                {
-                    if (item.ItemNumber == itemNumber)
-                    {
-                        return item;
-                    }
-                }
-                return null;
+                return AuctionItemRepository.AuctionItems.Find(x => x.ItemNumber == itemNumber);
             }
         }
 
@@ -40,23 +33,24 @@ namespace WCFPracticeExam
         {
             lock (_lock)
             {
-                foreach (var item in AuctionItemRepository.AuctionItems)
+                AuctionItem AI = AuctionItemRepository.AuctionItems.Find(x => x.ItemNumber == newBid.ItemNumber);
+                if (AI.BidPrice < newBid.Price)
                 {
-                    if (item.ItemNumber == newBid.ItemNumber)
-                    {
-                        if (item.BidPrice < newBid.Price)
-                        {
-                            item.BidPrice = newBid.Price;
-                            item.BidCustomerName = newBid.CustomName;
-                            item.BidCustomerPhone = newBid.CustomPhone;
-                            item.BidTimestamp = DateTime.Now;
-                            return "OK";
-                        }
-                        return "Bid too low";
-                    }
+                    AI.BidPrice = newBid.Price;
+                    AI.BidCustomerName = newBid.CustomName;
+                    AI.BidCustomerPhone = newBid.CustomPhone;
+                    AI.BidTimestamp = DateTime.Now;
+                    return "OK";
+                }
+                else if (AI != null)
+                {
+                    return "Bid too low";
+                }
+                else
+                {
+                    return "Item does not exist";
                 }
             }
-            return "Item does not exist";
         }
     }
 }
