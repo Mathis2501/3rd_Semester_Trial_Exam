@@ -1,26 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.ServiceModel.Web;
-using System.Text;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+using WebApiWebApplication.Models;
 
-namespace WCFPracticeExam
+namespace WebApiWebApplication.Controllers
 {
-    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service1" in code, svc and config file together.
-    // NOTE: In order to launch WCF Test Client for testing this service, please select Service1.svc or Service1.svc.cs at the Solution Explorer and start debugging.
-    public class Service1 : IService1
+    public class AuctionController : ApiController
     {
-        private object _lock;
-        public AuctionItem GetAuctionItem(int itemNumber)
-        {
-            lock (_lock)
-            {
-                return AuctionItemRepository.AuctionItems.Find(x => x.ItemNumber == itemNumber);
-            }
-        }
-
+        private static object _lock = new object();
+        // GET: api/Auction
         public List<AuctionItem> GetAuctionItems()
         {
             lock (_lock)
@@ -29,7 +20,18 @@ namespace WCFPracticeExam
             }
         }
 
-        public string BidOnItem(Bid newBid)
+        // GET: api/Auction/5
+        public AuctionItem GetAuctionItem(int id)
+        {
+            lock (_lock)
+            {
+                return AuctionItemRepository.AuctionItems.Find(x => x.ItemNumber == id);
+            }
+        }
+
+        // POST: api/Auction
+        
+        public string Post([FromBody]Bid newBid)
         {
             lock (_lock)
             {
@@ -51,6 +53,16 @@ namespace WCFPracticeExam
                     return "Item does not exist";
                 }
             }
+        }
+
+        // PUT: api/Auction/5
+        public void Put(int id, [FromBody]string value)
+        {
+        }
+
+        // DELETE: api/Auction/5
+        public void Delete(int id)
+        {
         }
     }
 }
