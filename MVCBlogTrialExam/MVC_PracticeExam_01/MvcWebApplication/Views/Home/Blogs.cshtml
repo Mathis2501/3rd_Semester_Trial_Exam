@@ -1,0 +1,62 @@
+﻿@using System.Net.Http
+@model IEnumerable<MvcWebApplication.Models.BlogPost>
+
+@{
+    ViewData["Title"] = "Blogs";
+}
+
+<h2>Blogs</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<form>
+    <p>
+        Title: <input type="text" name="SearchString">
+        <input type="submit" value="Filter"/>
+    </p>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Content)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CreationDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Author)
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Content)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreationDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
