@@ -36,7 +36,11 @@ namespace WebApiWebApplication.Controllers
             lock (_lock)
             {
                 AuctionItem AI = AuctionItemRepository.AuctionItems.Find(x => x.ItemNumber == newBid.ItemNumber);
-                if (AI.BidPrice < newBid.Price)
+                if (AI != null)
+                {
+                    return "Bid too low";
+                }
+                else if (AI.BidPrice < newBid.Price)
                 {
                     AI.BidPrice = newBid.Price;
                     AI.BidCustomerName = newBid.CustomName;
@@ -44,16 +48,10 @@ namespace WebApiWebApplication.Controllers
                     AI.BidTimestamp = DateTime.Now;
                     return "OK";
                 }
-                else if (AI != null)
-                {
-                    return "Bid too low";
-                }
-                else
-                {
-                    return "Item does not exist";
-                }
             }
+            return "Item does not exist";
         }
+        
 
         // PUT: api/Auction/5
         public void Put(int id, [FromBody]string value)

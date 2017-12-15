@@ -14,7 +14,7 @@ namespace MvcWebApplication.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Blogs");
         }
 
         public IActionResult About()
