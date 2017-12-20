@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using AuctionsService;
 using AuctionWebApplication.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AuctionWebApplication.Controllers
 {
@@ -29,9 +29,45 @@ namespace AuctionWebApplication.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Auctions()
+        {
+            AuctionsServiceClient AuctionService = new AuctionsServiceClient();
+            return View(await AuctionService.GetAllAuctionItemsAsync());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Auctions(string SearchString)
+        {
+            if (SearchString != null)
+            {
+                AuctionsServiceClient AuctionService = new AuctionsServiceClient();
+                AuctionItem[] Auctions = await AuctionService.GetAllAuctionItemsAsync();
+                return View(Auctions.Where(x => x.BidCustomName == SearchString));
+            }
+            return RedirectToAction("Auctions");
+        }
+
+        public async Task<IActionResult> AuctionDetails(int id)
+        {
+            if (id == 0)
+            {
+                return RedirectToAction("Auctions");
+            }
+            AuctionsServiceClient AuctionService = new AuctionsServiceClient();
+            return View(await AuctionService.GetAuctionItemAsync(id));
+        }
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Bid(int ItemNumber, int BidPrice, string BidCustomName, string BidCustomPhone)
+        {
+            AuctionsServiceClient AuctionService = new AuctionsServiceClient();
+            await AuctionService.ProvideBidAsync(ItemNumber, BidPrice, BidCustomName, BidCustomName);
+            return RedirectToAction("Auctions");
         }
     }
 }
