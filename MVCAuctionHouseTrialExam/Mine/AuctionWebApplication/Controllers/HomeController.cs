@@ -66,7 +66,7 @@ namespace AuctionWebApplication.Controllers
         public async Task<IActionResult> Bid(int ItemNumber, int BidPrice, string BidCustomName, string BidCustomPhone)
         {
             AuctionsServiceClient AuctionService = new AuctionsServiceClient();
-            await AuctionService.ProvideBidAsync(ItemNumber, BidPrice, BidCustomName, BidCustomName);
+            await AuctionService.ProvideBidAsync(ItemNumber, BidPrice, BidCustomName, BidCustomPhone);
             return RedirectToAction("Auctions");
         }
     }
